@@ -94,9 +94,19 @@ export class MoodTracker {
       this.currentFeedbackDiv.remove();
     }
 
-    // Create and show the feedback div with loading state
-    const moodInput = document.getElementById('mood-input');
-    if (moodInput) {
+    try {
+      // Get AI feedback
+      const aiFeedback = await AIHelper.getEmotionalSupport({
+        mood: this.selectedMood.value,
+        journal: entry.journal,
+        tags: entry.tags
+      });
+
+      // Save entry first
+      entries.push(entry);
+      localStorage.setItem('moodEntries', JSON.stringify(entries));
+
+      // Create and show the feedback div
       const feedbackDiv = document.createElement('div');
       feedbackDiv.className = 'mt-4 p-4 rounded-md bg-accent text-accent-foreground';
       feedbackDiv.innerHTML = `
@@ -109,33 +119,16 @@ export class MoodTracker {
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
-        <p class="text-sm flex items-center gap-2">
-          <span class="typing-dots">Thinking</span>
-          <span class="inline-flex gap-1">
-            <span class="w-1 h-1 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-            <span class="w-1 h-1 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-            <span class="w-1 h-1 bg-current rounded-full animate-bounce"></span>
-          </span>
-        </p>
+        <p class="text-sm"></p>
       `;
-      moodInput.appendChild(feedbackDiv);
+
+      // Add feedback div after the save button
+      const saveButton = document.getElementById('save-entry');
+      saveButton.parentNode.insertBefore(feedbackDiv, saveButton.nextSibling);
       this.currentFeedbackDiv = feedbackDiv;
 
-      // Get AI feedback
-      const aiFeedback = await AIHelper.getEmotionalSupport({
-        mood: this.selectedMood.value,
-        journal: entry.journal,
-        tags: entry.tags
-      });
-
-      // Save entry
-      entries.push(entry);
-      localStorage.setItem('moodEntries', JSON.stringify(entries));
-
       // Create the paragraph for the response
-      const responseParagraph = document.createElement('p');
-      responseParagraph.className = 'text-sm';
-      feedbackDiv.querySelector('p').replaceWith(responseParagraph);
+      const responseParagraph = feedbackDiv.querySelector('p');
 
       // Typing animation
       let charIndex = 0;
@@ -150,15 +143,16 @@ export class MoodTracker {
 
       // Start typing animation
       typeWriter();
-    } else {
-      console.error('Could not find mood-input element');
-      this.showNotification('AI Response: ' + aiFeedback, 'success');
-    }
 
-    this.resetForm();
-    this.renderChart();
-    this.updateInsights();
-    this.showNotification('Entry saved successfully!', 'success');
+      this.resetForm();
+      this.renderChart();
+      this.updateInsights();
+      this.showNotification('Entry saved successfully!', 'success');
+
+    } catch (error) {
+      console.error('Error saving entry:', error);
+      this.showNotification('Failed to get AI feedback, but entry was saved', 'error');
+    }
   }
 
   resetForm() {

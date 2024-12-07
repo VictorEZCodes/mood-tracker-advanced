@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mood Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="min-h-screen bg-background font-sans antialiased">
+  <div class="relative flex min-h-screen flex-col">
+    <header
+      class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div class="container flex h-14 items-center">
+        <div class="flex items-center space-x-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-smile">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+            <line x1="9" x2="9.01" y1="9" y2="9" />
+            <line x1="15" x2="15.01" y1="9" y2="9" />
+          </svg>
+          <span class="font-bold">Mood Tracker</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <div class="container mx-auto px-4 py-8 max-w-3xl">
+        <!-- Mood Input Card -->
+        <div class="rounded-lg border bg-card p-4 md:p-6 shadow-sm mb-6">
+          <h2 class="text-lg font-semibold mb-4">How are you feeling today?</h2>
+
+          <!-- Mood Buttons -->
+          <div id="mood-buttons" class="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-4 mb-6">
+            <!-- Buttons will be added by JavaScript -->
+          </div>
+
+          <!-- Journal and Tags -->
+          <div class="space-y-4">
+            <div>
+              <label for="journal-text" class="block text-sm font-medium mb-2">Journal Entry</label>
+              <textarea id="journal-text" rows="3" placeholder="Write about your day... (optional)"
+                class="w-full rounded-md border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"></textarea>
+            </div>
+
+            <div>
+              <label for="tags-text" class="block text-sm font-medium mb-2">Tags</label>
+              <input type="text" id="tags-text" placeholder="work, exercise, family..."
+                class="w-full rounded-md border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+            </div>
+          </div>
+
+          <!-- Save Button -->
+          <button id="save-entry"
+            class="mt-4 w-full md:w-auto rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+            Save Entry
+          </button>
+        </div>
+
+        <!-- Mood Chart Card -->
+        <div class="rounded-lg border bg-card p-4 md:p-6 shadow-sm mb-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
+            <h2 class="text-lg font-semibold">Your Mood History</h2>
+            <div class="flex gap-2">
+              <button id="week-view"
+                class="chart-button flex-1 md:flex-none inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-3 py-1 text-sm font-medium shadow hover:bg-primary/90">Week</button>
+              <button id="month-view"
+                class="chart-button flex-1 md:flex-none inline-flex items-center justify-center rounded-md bg-secondary text-secondary-foreground px-3 py-1 text-sm font-medium hover:bg-secondary/90">Month</button>
+            </div>
+          </div>
+          <div class="h-[200px] md:h-[250px]">
+            <canvas id="moodChartCanvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Insights Card -->
+        <div class="rounded-lg border bg-card p-4 md:p-6 shadow-sm">
+          <h2 class="text-lg font-semibold mb-4">Insights</h2>
+          <div id="insights-content" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Insights will be added by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Notification -->
+  <div id="notification" class="fixed bottom-4 right-4 transform translate-y-[150%] transition-transform duration-300">
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

@@ -28,17 +28,52 @@ export class MoodTracker {
 
   renderMoodButtons() {
     const container = document.getElementById('mood-buttons');
-    this.moods.forEach(mood => {
-      const button = document.createElement('button');
-      button.className = 'inline-flex flex-col items-center justify-center rounded-lg border-2 border-transparent p-4 hover:border-primary hover:bg-accent transition-all';
-      button.innerHTML = `
-        <span class="text-4xl">${mood.emoji}</span>
-        <span class="mt-2 text-sm font-medium">${mood.label}</span>
-      `;
-      button.dataset.value = mood.value;
-      button.addEventListener('click', () => this.selectMood(button, mood));
-      container.appendChild(button);
+    container.className = 'grid grid-cols-5 gap-2 md:gap-4 mb-6 max-w-xl mx-auto md:grid-cols-5';
+
+    const mobileLayout = document.createElement('div');
+    mobileLayout.className = 'col-span-5 md:hidden grid gap-2';
+
+    const topRow = document.createElement('div');
+    topRow.className = 'grid grid-cols-3 gap-2';
+
+    const bottomRow = document.createElement('div');
+    bottomRow.className = 'grid grid-cols-2 gap-2 w-2/3 mx-auto';
+
+    this.moods.slice(0, 3).forEach(mood => {
+      const button = this.createMoodButton(mood);
+      topRow.appendChild(button);
     });
+
+    this.moods.slice(3).forEach(mood => {
+      const button = this.createMoodButton(mood);
+      bottomRow.appendChild(button);
+    });
+
+    mobileLayout.appendChild(topRow);
+    mobileLayout.appendChild(bottomRow);
+    container.appendChild(mobileLayout);
+
+    const desktopLayout = document.createElement('div');
+    desktopLayout.className = 'hidden md:grid md:grid-cols-5 gap-4 col-span-5';
+
+    this.moods.forEach(mood => {
+      const button = this.createMoodButton(mood);
+      desktopLayout.appendChild(button);
+    });
+
+    container.appendChild(desktopLayout);
+  }
+
+  createMoodButton(mood) {
+    const button = document.createElement('button');
+    button.className = 'inline-flex flex-col items-center justify-center rounded-lg border-2 border-transparent p-2 md:p-4 hover:border-primary hover:bg-accent transition-all';
+    button.innerHTML = `
+    <span class="text-2xl md:text-4xl">${mood.emoji}</span>
+    <span class="mt-1 md:mt-2 text-xs md:text-sm font-medium">${mood.label}</span>
+  `;
+    button.dataset.value = mood.value;
+    button.addEventListener('click', () => this.selectMood(button, mood));
+    return button;
   }
 
   selectMood(button, mood) {
